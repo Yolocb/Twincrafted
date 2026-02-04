@@ -613,10 +613,11 @@ section {
 }
 
 .cases-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    justify-content: center;
     gap: var(--space-xl);
     margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
 }
 
 .case-item {
@@ -625,6 +626,9 @@ section {
     box-shadow: var(--shadow-md);
     overflow: hidden;
     transition: transform 0.3s ease;
+    max-width: 600px;
+    width: 100%;
+    flex: 1 1 auto;
 }
 
 .case-item:hover {
@@ -1089,8 +1093,12 @@ section {
     }
     
     .cases-grid {
-        grid-template-columns: repeat(2, 1fr);
+        justify-content: center;
         gap: var(--space-lg);
+    }
+    
+    .case-item {
+        max-width: 450px;
     }
     
     .contact-content {
@@ -1109,7 +1117,11 @@ section {
     }
     
     .cases-grid {
-        grid-template-columns: repeat(3, 1fr);
+        justify-content: center;
+    }
+    
+    .case-item {
+        max-width: 400px;
     }
     
     .why-benefits {
