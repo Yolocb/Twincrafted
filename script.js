@@ -195,16 +195,73 @@ function initContactForm() {
             return;
         }
         
-        // Simulate form submission
-        showFormMessage('Nachricht wird gesendet...', 'info');
+        // Create formatted email content
+        const emailSubject = subject ? getSubjectText(subject) : 'Neue Kontaktanfrage von TwinCrafted Website';
+        const emailBody = createFormattedEmailBody(name, email, company, subject, message);
         
-        // Simulate API call delay
+        // Create mailto link with formatted content
+        const mailtoLink = `mailto:Brahner.Dornseifer@outlook.de?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+        
+        // Show sending message
+        showFormMessage('E-Mail-Programm wird geöffnet...', 'info');
+        
+        // Open email client
+        window.location.href = mailtoLink;
+        
+        // Show success message after short delay
         setTimeout(() => {
-            showFormMessage('Vielen Dank für Ihre Nachricht! Wir werden uns bald bei Ihnen melden.', 'success');
+            showFormMessage('Vielen Dank für Ihre Nachricht! Ihr E-Mail-Programm wurde mit allen Daten geöffnet.', 'success');
             contactForm.reset();
-            console.log('Contact form submitted:', { name, email, company, subject, message });
-        }, 1500);
+            console.log('Contact form submitted via mailto:', { name, email, company, subject, message });
+        }, 1000);
     });
+}
+
+// Create formatted email body with all form data
+function createFormattedEmailBody(name, email, company, subject, message) {
+    const currentDate = new Date().toLocaleDateString('de-DE', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    let emailBody = `Neue Kontaktanfrage über TwinCrafted Website\n`;
+    emailBody += `===================================\n\n`;
+    emailBody += `Eingangsdatum: ${currentDate}\n\n`;
+    emailBody += `KONTAKTDATEN:\n`;
+    emailBody += `Name: ${name}\n`;
+    emailBody += `E-Mail: ${email}\n`;
+    
+    if (company) {
+        emailBody += `Unternehmen: ${company}\n`;
+    }
+    
+    if (subject) {
+        emailBody += `Betreff: ${getSubjectText(subject)}\n`;
+    }
+    
+    emailBody += `\nNACHRICHT:\n`;
+    emailBody += `${'-'.repeat(50)}\n`;
+    emailBody += `${message}\n`;
+    emailBody += `${'-'.repeat(50)}\n\n`;
+    emailBody += `Diese Nachricht wurde über das Kontaktformular der TwinCrafted Website gesendet.\n`;
+    emailBody += `Bitte antworten Sie direkt an die angegebene E-Mail-Adresse: ${email}`;
+    
+    return emailBody;
+}
+
+// Get readable subject text from form value
+function getSubjectText(subjectValue) {
+    const subjectMap = {
+        'beratung': 'Beratungsanfrage',
+        'projekt': 'Projektanfrage', 
+        'info': 'Allgemeine Information',
+        'sonstiges': 'Sonstiges'
+    };
+    
+    return subjectMap[subjectValue] || 'Kontaktanfrage';
 }
 
 // Form validation helper
